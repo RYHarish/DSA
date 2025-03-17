@@ -193,7 +193,103 @@ public class SinglyLinkedList {
     }
 
     // inset a node in sorted linked list
+    private ListNode insertInSortedList(ListNode head, int value){
+        ListNode valuetoInsert = new ListNode(value);
+        if(head == null){
+            return valuetoInsert;
+        }
+        ListNode curr = head;
+        ListNode temp = null;
 
+        while(curr != null && curr.data < valuetoInsert.data){
+            temp = curr;
+            curr = curr.next;
+        }
+        temp.next = valuetoInsert;
+        valuetoInsert.next = curr;
+        return head;
+    }
+
+    // remove a key from singly linked list
+    private ListNode removeKey(ListNode head, int key){
+      
+        if(head.data == key){
+            return head.next;
+        }
+
+        ListNode curr = head;
+        ListNode temp = null;
+        while(curr != null){
+            if(curr.data == key){
+                temp.next = curr.next;
+                return head;
+            }
+            temp = curr;
+            curr= curr.next;
+        }
+        return head;
+
+    }
+
+    // detect a loop in a linked list
+    private boolean detectLoop(ListNode head){
+        ListNode fastPtr = head;
+        ListNode slowPtr = head;
+        while(fastPtr != null && fastPtr.next != null){
+            fastPtr = fastPtr.next.next;
+            slowPtr = slowPtr.next;
+            if(fastPtr == slowPtr){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // find the start of a loop in singly linked list (floyd's cycle detection algorithm)
+    private ListNode detectLoopStart(ListNode head){
+        ListNode fastPtr = head;
+        ListNode slowPtr = head;
+        while(fastPtr != null && fastPtr.next != null){
+            fastPtr = fastPtr.next.next;
+            slowPtr = slowPtr.next;
+            if(fastPtr == slowPtr){
+                return getStartPoint(head, slowPtr);
+            }
+        }
+        return null;
+    }
+
+    private ListNode getStartPoint(ListNode head, ListNode slowPtr){
+        ListNode temp = head;
+        while(temp != slowPtr){// add .next to remove loop
+            temp = temp.next;
+            slowPtr = slowPtr.next;
+        }
+        return temp; // return null to remove the loop;
+    }
+
+    // merge two sorted linked list
+    private ListNode mergeTwoLists(ListNode a, ListNode b){
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+        while(a != null && b != null){
+            if(a.data <= b.data){
+                tail.next = a;
+                a = a.next;
+            }
+            else{
+                tail.next = b;
+                b = b.next;
+            }
+            tail = tail.next;
+        }
+        if(a == null && b != null){
+            tail.next = b;
+        } else if(b == null && a != null){
+            tail.next = a;
+        }
+        return dummy.next;
+    }
 
     public static void main(String[] args){
 
@@ -281,10 +377,58 @@ public class SinglyLinkedList {
         sorted.next.next.next.next = new ListNode(3);
         sorted.next.next.next.next.next = new ListNode(4);
 
+        // remove duplicate from sorted Singy Linked List
         System.out.println("remove duplicate from sorted Singy Linked List");
         sorted = s.removeDubs(sorted);
         System.out.print("LinkedList: ");
         s.display(sorted);
         System.out.println("Length of the given LinkedList: " + s.length(sorted) + "\n");
+
+        // inset a node in sorted linked list
+        System.out.println("inset a node in sorted linked list");
+        sorted = s.insertInSortedList(sorted, 5);
+        System.out.print("LinkedList: ");
+        s.display(sorted);
+        System.out.println("Length of the given LinkedList: " + s.length(sorted) + "\n");
+
+        // remove a key from singly linked list
+        System.out.println("remove a key from singly linked list");
+        sorted = s.removeKey(sorted, 9);
+        System.out.print("LinkedList: ");
+        s.display(sorted);
+        System.out.println("Length of the given LinkedList: " + s.length(sorted) + "\n");
+
+        // detect a loop in a linked list
+        System.out.println("detect a loop in a linked list");
+        ListNode loop = new ListNode(1);
+        loop.next = new ListNode(2);
+        loop.next.next = new ListNode(3);
+        loop.next.next.next = new ListNode(4);
+        loop.next.next.next.next = loop.next;
+
+        System.out.println("Loop present in the linked list: " + s.detectLoop(loop) + "\n");    
+
+        // find the start of a loop in singly linked list
+        System.out.println("find the start of a loop in singly linked list");
+        System.out.println("Loop present in the linked list: " + s.detectLoopStart(loop).data + "\n");
+
+        // merge two sorted linked list
+        ListNode sorted1 = new ListNode(1);
+        sorted1.next = new ListNode(2);     
+        sorted1.next.next = new ListNode(4);
+        sorted1.next.next.next = new ListNode(6);
+        System.out.print("LinkedList1: ");
+        s.display(sorted1);
+
+        // merge two sorted linked list
+        ListNode sorted2 = new ListNode(0);
+        sorted2.next = new ListNode(3);
+        sorted2.next.next = new ListNode(5);
+        sorted2.next.next.next = new ListNode(7);
+        System.out.print("LinkedList2: ");
+        s.display(sorted2);
+        ListNode merged = s.mergeTwoLists(sorted1, sorted2);
+        System.out.print("Merged LinkedList: ");
+        s.display(merged);
     }
 }
