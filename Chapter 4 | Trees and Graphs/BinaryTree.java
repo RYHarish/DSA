@@ -141,6 +141,23 @@ public class BinaryTree {
         }
     }
 
+    public int findMax(TreeNode root){
+        if(root == null){
+            return Integer.MIN_VALUE;
+        }
+        int result = root.data;
+        int left = findMax(root.left);
+        int right = findMax(root.right);
+        if(left > result){
+            result = left;
+        }
+        if(right > result){
+            result = right;
+        }
+
+        return result;
+    }
+
     public static void main(String[] args) {
         BinaryTree bt = new BinaryTree();
         bt.createBinaryTree();
@@ -164,5 +181,7 @@ public class BinaryTree {
         System.out.println();
         System.out.print("level Order: ");
         bt.levelOrder(bt.root);
+        System.out.println();
+        System.out.print("find max: " + bt.findMax(bt.root));
     }
 }
